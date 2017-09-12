@@ -1,10 +1,11 @@
 //! JSON parser which picks up values directly without performing tokenization
-extern crate fnv;
+extern crate farmhash;
 extern crate x86intrin;
 
 mod avx;
 mod bit;
 mod error;
+mod farmhash_collections;
 mod index_builder;
 mod parser;
 mod pikkr;

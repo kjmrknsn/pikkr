@@ -1,19 +1,19 @@
+use farmhash_collections::{FarmHashMap, FarmHashSet};
 use super::bit;
 use super::error::{Error, ErrorKind};
 use super::query::Query;
 use super::result::Result;
 use super::utf8::{COMMA, CR, HT, LF, RIGHT_BRACE, SPACE};
-use fnv::{FnvHashMap, FnvHashSet};
 
 #[inline]
 pub fn basic_parse<'a>(
     rec: &'a [u8],
     index: &[Vec<u64>],
-    queries: &mut FnvHashMap<&[u8], Query>,
+    queries: &mut FarmHashMap<&[u8], Query>,
     start: usize,
     end: usize,
     level: usize,
-    stats: &mut Vec<FnvHashSet<usize>>,
+    stats: &mut Vec<FarmHashSet<usize>>,
     set_stats: bool,
     results: &mut Vec<Option<&'a [u8]>>,
     b_quote: &[u64],
@@ -74,7 +74,7 @@ pub fn basic_parse<'a>(
 }
 
 #[inline]
-pub fn speculative_parse<'a>(rec: &'a [u8], index: &[Vec<u64>], queries: &FnvHashMap<&[u8], Query>, start: usize, end: usize, level: usize, stats: &[FnvHashSet<usize>], results: &mut Vec<Option<&'a [u8]>>, b_quote: &[u64], colon_positions: &mut Vec<Vec<usize>>) -> Result<bool> {
+pub fn speculative_parse<'a>(rec: &'a [u8], index: &[Vec<u64>], queries: &FarmHashMap<&[u8], Query>, start: usize, end: usize, level: usize, stats: &[FarmHashSet<usize>], results: &mut Vec<Option<&'a [u8]>>, b_quote: &[u64], colon_positions: &mut Vec<Vec<usize>>) -> Result<bool> {
     generate_colon_positions(index, start, end, level, colon_positions);
     for (s, q) in queries.iter() {
         let mut found = false;
@@ -284,7 +284,7 @@ mod tests {
         let mut s_left = Vec::new();
         let r = index_builder::build_leveled_colon_bitmap(&b_colon, &b_left, &b_right, l, &mut s_left, &mut index);
         assert_eq!(Ok(()), r);
-        let mut children = FnvHashMap::default();
+        let mut children = FarmHashMap::default();
         children.insert(
             "d1".as_bytes(),
             Query {
@@ -303,7 +303,7 @@ mod tests {
                 children: None,
             },
         );
-        let mut queries = FnvHashMap::default();
+        let mut queries = FarmHashMap::default();
         queries.insert(
             "aaa".as_bytes(),
             Query {
@@ -351,13 +351,13 @@ mod tests {
         );
 
         let mut stats = vec![
-            FnvHashSet::default(),
-            FnvHashSet::default(),
-            FnvHashSet::default(),
-            FnvHashSet::default(),
-            FnvHashSet::default(),
-            FnvHashSet::default(),
-            FnvHashSet::default(),
+            FarmHashSet::default(),
+            FarmHashSet::default(),
+            FarmHashSet::default(),
+            FarmHashSet::default(),
+            FarmHashSet::default(),
+            FarmHashSet::default(),
+            FarmHashSet::default(),
         ];
 
         let mut results = vec![None, None, None, None, None, None];

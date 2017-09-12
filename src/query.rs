@@ -1,5 +1,5 @@
+use farmhash_collections::FarmHashMap;
 use std::cmp;
-use fnv::FnvHashMap;
 use error::{Error, ErrorKind};
 use result::Result;
 use utf8::{DOLLAR, DOT};
@@ -12,12 +12,12 @@ pub struct Query<'a> {
     pub i: usize,
     pub ri: usize,
     pub target: bool,
-    pub children: Option<FnvHashMap<&'a [u8], Query<'a>>>,
+    pub children: Option<FarmHashMap<&'a [u8], Query<'a>>>,
 }
 
 /// A pattern tree associated with the queries
 pub struct QueryTree<'a> {
-    pub root: FnvHashMap<&'a [u8], Query<'a>>,
+    pub root: FarmHashMap<&'a [u8], Query<'a>>,
     pub num_queries: usize,
     pub max_depth: usize,
     pub num_nodes: usize,
@@ -25,7 +25,7 @@ pub struct QueryTree<'a> {
 
 impl<'a> QueryTree<'a> {
     pub fn new<S: ?Sized + AsRef<[u8]>>(queries: &[&'a S]) -> Result<Self> {
-        let mut root = FnvHashMap::default();
+        let mut root = FarmHashMap::default();
         let mut level = 0;
         let mut qi = 0;
 
@@ -76,7 +76,7 @@ fn is_valid_query_str(query_str: &[u8]) -> bool {
 }
 
 #[inline]
-fn set_queries<'a, F>(queries: &mut FnvHashMap<&'a [u8], Query<'a>>, s: &'a [u8], mut factory: F) -> usize
+fn set_queries<'a, F>(queries: &mut FarmHashMap<&'a [u8], Query<'a>>, s: &'a [u8], mut factory: F) -> usize
 where
     F: FnMut() -> Query<'a>,
 {
@@ -86,7 +86,7 @@ where
     let query = queries.entry(t).or_insert_with(&mut factory);
     if u.len() > 1 {
         // The remaining segments are exist
-        let children = query.children.get_or_insert(FnvHashMap::default());
+        let children = query.children.get_or_insert(FarmHashMap::default());
         set_queries(children, &u[1..], factory) + 1
     } else {
         query.target = true; // mark the node as a target node

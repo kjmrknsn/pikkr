@@ -1,16 +1,16 @@
+use farmhash_collections::FarmHashSet;
 use super::error::{Error, ErrorKind};
 use super::index_builder::IndexBuilder;
 use super::parser;
 use super::query::QueryTree;
 use super::result::Result;
-use fnv::FnvHashSet;
 
 /// JSON parser which picks up values directly without performing tokenization
 pub struct Pikkr<'a> {
     queries: QueryTree<'a>,
     index_builder: IndexBuilder,
 
-    stats: Vec<FnvHashSet<usize>>,
+    stats: Vec<FarmHashSet<usize>>,
     colon_positions: Vec<Vec<usize>>,
 
     train_num: usize,

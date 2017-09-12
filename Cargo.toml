@@ -12,5 +12,5 @@ categories = ["algorithms", "data-structures", "parser-implementations", "parsin
 license = "MIT/Apache-2.0"
 
 [dependencies]
+farmhash = "1.1.5"
 x86intrin = "0.4.3"
-fnv = "1.0.5"
